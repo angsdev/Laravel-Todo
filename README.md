@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## CRUD/ToDo RESTful Web Service
+## Todo RESTful Web Service
 
 Servicio web tipo lista de tareas con operaciones CRUD sobre base de datos [MariaDB](https://mariadb.org), respetando y aplicando los principios REST: Interfaz uniforme, Cliente-Servidor, Sin estado, Cacheable y Sistema en capas; con ordenamiento, filtrado, paginado y autenticación JWT.
 Además, documentado con [Swagger](https://swagger.io).
