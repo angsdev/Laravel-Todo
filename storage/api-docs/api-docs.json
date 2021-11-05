@@ -1,0 +1,1584 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Todo CRUD",
+        "version": "1.1.0"
+    },
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "description": "Login by username/email and password.",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "description": "Pass user credentials.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "user": {
+                                        "type": "string",
+                                        "format": "user/phone/email",
+                                        "example": "user1234/0412-1234567/user1234@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns when login is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Returns when method isn't supported.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The method isn't supported for this route. Supported method: POST."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid Credentials."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "description": "Logout user and invalidate current token.",
+                "operationId": "authLogout",
+                "responses": {
+                    "200": {
+                        "description": "Returns when logout is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users.",
+                "description": "Get all users.",
+                "operationId": "getUsers",
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "type": "object",
+                                            "example": {
+                                                "current_page": 1,
+                                                "data": [
+                                                    {
+                                                        "id": 1,
+                                                        "firstName": "Earnestine",
+                                                        "lastName": "Cummings",
+                                                        "username": "tyrell.crist",
+                                                        "email": "ewillms@example.org",
+                                                        "api_token": null
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "firstName": "Elenora",
+                                                        "lastName": "Hoppe",
+                                                        "username": "odouglas",
+                                                        "email": "herminia.schaefer@example.com",
+                                                        "api_token": null
+                                                    },
+                                                    {
+                                                        "id": 3,
+                                                        "firstName": "Urban",
+                                                        "lastName": "Effertz",
+                                                        "username": "satterfield.aurore",
+                                                        "email": "qnitzsche@example.org",
+                                                        "api_token": null
+                                                    },
+                                                    {
+                                                        "id": 4,
+                                                        "firstName": "Milton",
+                                                        "lastName": "Bogisich",
+                                                        "username": "theodora43",
+                                                        "email": "okeefe.kiana@example.net",
+                                                        "api_token": null
+                                                    }
+                                                ],
+                                                "first_page_url": "http://server/users?page=1",
+                                                "from": 1,
+                                                "last_page": 4,
+                                                "last_page_url": "http://server/users?page=4",
+                                                "next_page_url": "http://server/users?page=2",
+                                                "path": "http://server/users",
+                                                "per_page": 15,
+                                                "prev_page_url": null,
+                                                "to": 15,
+                                                "total": 50
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create user.",
+                "description": "Create user.",
+                "operationId": "createUser",
+                "responses": {
+                    "201": {
+                        "description": "Returns when resource creation is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "users/{user}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get single user.",
+                "description": "Get single user.",
+                "operationId": "getUser",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id/email/phone/username.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user.",
+                "description": "Update user.",
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id/email/phone/username.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource update is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete user.",
+                "description": "Delete user.",
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id/email/phone/username.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query deletion is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user.",
+                "description": "Update user.",
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id/email/phone/username.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "tasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Get all tasks.",
+                "description": "Get all tasks.",
+                "operationId": "getTasks",
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "type": "object",
+                                            "example": {
+                                                "current_page": 1,
+                                                "data": [
+                                                    {
+                                                        "id": 1,
+                                                        "name": "Hallie Padberg IV",
+                                                        "description": "Nisi nam est est illum nisi corporis velit. Nobis expedita velit animi debitis eaque. Architecto officiis blanditiis nulla illo. Est consequatur magnam et aliquam eaque a deleniti iure.",
+                                                        "user_id": 31
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "name": "Reina Borer",
+                                                        "description": "Nihil et cumque tempore tempore consequatur. Placeat minus eum voluptatem ab. Odit est et reprehenderit maxime iure adipisci quae repudiandae.",
+                                                        "user_id": 29
+                                                    },
+                                                    {
+                                                        "id": 3,
+                                                        "name": "Terrence Heaney",
+                                                        "description": "Nobis mollitia dolores aliquam exercitationem non sed. Non perferendis ab quae voluptatem ullam impedit possimus. Voluptatem et vitae architecto aut aut tenetur et.",
+                                                        "user_id": 43
+                                                    },
+                                                    {
+                                                        "id": 4,
+                                                        "name": "Mrs. Alana Heaney IV",
+                                                        "description": "Laboriosam sunt maiores consequatur consequatur iure. Placeat asperiores laborum et et nemo vero. Sint molestiae error soluta quisquam culpa labore.",
+                                                        "user_id": 33
+                                                    }
+                                                ],
+                                                "first_page_url": "http://server/tasks?page=1",
+                                                "from": 1,
+                                                "last_page": 4,
+                                                "last_page_url": "http://server/tasks?page=4",
+                                                "next_page_url": "http://server/tasks?page=2",
+                                                "path": "http://server/tasks",
+                                                "per_page": 15,
+                                                "prev_page_url": null,
+                                                "to": 15,
+                                                "total": 50
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Create new task.",
+                "description": "Create new task.",
+                "operationId": "createTask",
+                "responses": {
+                    "201": {
+                        "description": "Returns when resource creation is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "tasks/{task}": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Get single task.",
+                "description": "Get single task.",
+                "operationId": "getTask",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Task id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Update task.",
+                "description": "Update task.",
+                "operationId": "updateTask",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Task id.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource update is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Delete task.",
+                "description": "Delete task.",
+                "operationId": "deleteTask",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Task id.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource deletion is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Update task.",
+                "description": "Update task.",
+                "operationId": "updateTask",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Task id.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource update is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "users/{user}/tasks": {
+          "get": {
+              "tags": [
+                  "User tasks"
+              ],
+              "summary": "Get all user tasks.",
+              "description": "Get all tasks for indicated user.",
+              "operationId": "getUserTasks",
+              "parameters": [
+                  {
+                      "name": "user",
+                      "in": "path",
+                      "description": "User id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Returns when resource query is success.",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "properties": {
+                                      "success": {
+                                          "type": "string",
+                                          "example": "true"
+                                      },
+                                      "content": {
+                                          "type": "object",
+                                          "example": {
+                                              "current_page": 1,
+                                              "data": [
+                                                  {
+                                                      "id": 1,
+                                                      "name": "Hallie Padberg IV",
+                                                      "description": "Nisi nam est est illum nisi corporis velit. Nobis expedita velit animi debitis eaque. Architecto officiis blanditiis nulla illo. Est consequatur magnam et aliquam eaque a deleniti iure.",
+                                                      "user_id": 31
+                                                  },
+                                                  {
+                                                      "id": 2,
+                                                      "name": "Reina Borer",
+                                                      "description": "Nihil et cumque tempore tempore consequatur. Placeat minus eum voluptatem ab. Odit est et reprehenderit maxime iure adipisci quae repudiandae.",
+                                                      "user_id": 29
+                                                  },
+                                                  {
+                                                      "id": 3,
+                                                      "name": "Terrence Heaney",
+                                                      "description": "Nobis mollitia dolores aliquam exercitationem non sed. Non perferendis ab quae voluptatem ullam impedit possimus. Voluptatem et vitae architecto aut aut tenetur et.",
+                                                      "user_id": 43
+                                                  },
+                                                  {
+                                                      "id": 4,
+                                                      "name": "Mrs. Alana Heaney IV",
+                                                      "description": "Laboriosam sunt maiores consequatur consequatur iure. Placeat asperiores laborum et et nemo vero. Sint molestiae error soluta quisquam culpa labore.",
+                                                      "user_id": 33
+                                                  }
+                                              ],
+                                              "first_page_url": "http://server/tasks?page=1",
+                                              "from": 1,
+                                              "last_page": 4,
+                                              "last_page_url": "http://server/tasks?page=4",
+                                              "next_page_url": "http://server/tasks?page=2",
+                                              "path": "http://server/tasks",
+                                              "per_page": 15,
+                                              "prev_page_url": null,
+                                              "to": 15,
+                                              "total": 50
+                                          }
+                                      }
+                                  },
+                                  "type": "object"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Returns when user isn't authenticated.",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "properties": {
+                                      "success": {
+                                          "type": "string",
+                                          "example": "false"
+                                      },
+                                      "message": {
+                                          "type": "string",
+                                          "example": "Unauthenticated."
+                                      }
+                                  },
+                                  "type": "object"
+                              }
+                          }
+                      }
+                  }
+              },
+              "security": [
+                  {
+                      "bearer": []
+                  }
+              ]
+          },
+          "post": {
+              "tags": [
+                  "User tasks"
+              ],
+              "summary": "Create user task.",
+              "description": "Create new task for indicated user.",
+              "operationId": "createUserTask",
+              "parameters": [
+                  {
+                      "name": "user",
+                      "in": "path",
+                      "description": "User id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Returns when resource creation is success.",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "properties": {
+                                      "success": {
+                                          "type": "string",
+                                          "example": "true"
+                                      },
+                                      "content": {
+                                          "$ref": "#/components/schemas/Task"
+                                      }
+                                  },
+                                  "type": "object"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Returns when user isn't authenticated.",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "properties": {
+                                      "success": {
+                                          "type": "string",
+                                          "example": "false"
+                                      },
+                                      "message": {
+                                          "type": "string",
+                                          "example": "Unauthenticated."
+                                      }
+                                  },
+                                  "type": "object"
+                              }
+                          }
+                      }
+                  }
+              },
+              "security": [
+                  {
+                      "bearer": []
+                  }
+              ]
+          }
+        },
+        "users/{user}/tasks/{task}": {
+            "get": {
+                "tags": [
+                    "User tasks"
+                ],
+                "summary": "Get single user task.",
+                "description": "Get single task for indicated user.",
+                "operationId": "getUserTask",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Task id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource query is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User tasks"
+                ],
+                "summary": "Update user task.",
+                "description": "Update task for indicated user.",
+                "operationId": "updateUserTask",
+                "parameters": [
+                  {
+                      "name": "user",
+                      "in": "path",
+                      "description": "User id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+                  {
+                      "name": "task",
+                      "in": "path",
+                      "description": "Task id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource update is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User tasks"
+                ],
+                "summary": "Delete task.",
+                "description": "Delete task.",
+                "operationId": "deleteTask",
+                "parameters": [
+                  {
+                      "name": "user",
+                      "in": "path",
+                      "description": "User id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+                  {
+                      "name": "task",
+                      "in": "path",
+                      "description": "Task id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource deletion is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "User tasks"
+                ],
+                "summary": "Update user task.",
+                "description": "Update task for indicated user.",
+                "operationId": "updateUserTask",
+                "parameters": [
+                  {
+                      "name": "user",
+                      "in": "path",
+                      "description": "User id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+                  {
+                      "name": "task",
+                      "in": "path",
+                      "description": "Task id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns when resource update is success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "true"
+                                        },
+                                        "content": {
+                                            "$ref": "#/components/schemas/Task"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user isn't authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "false"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Task": {
+                "required": [
+                    "title",
+                    "user_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "User id relationated with this task",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "Read some book"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Task to remember read some book when exist the chance."
+                    },
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "user"
+                }
+            },
+            "User": {
+                "required": [
+                    "username",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "John"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "Doe"
+                    },
+                    "username": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "example": "username1234"
+                    },
+                    "email": {
+                        "description": "User unique email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@gmail.com"
+                    },
+                    "password": {
+                        "description": "User password",
+                        "type": "string",
+                        "maxLength": 60,
+                        "example": "password123"
+                    },
+                    "api_token": {
+                        "description": "User JWT",
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "$asd!#(/Aasdasdaf76)("
+                    },
+                    "email_verified_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2019-02-25 12:59:20"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "user"
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearer": {
+                "type": "apiKey",
+                "description": "Enter your bearer token in the format <b>Bearer \\<token\\></b>.",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}
